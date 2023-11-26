@@ -1,0 +1,31 @@
+import numpy as np
+import gym
+
+
+# Define the environment
+env = gym.make("Taxi-v2").env
+
+# Initialize the q-table with zero values
+q_table = np.zeros([env.observation_space.n, env.action_space.n])
+
+# Hyperparameters
+alpha = 0.1  # learning-rate
+gamma = 0.7  # discount-factor
+epsilon = 0.1  # explor vs exploit
+
+# Random generator
+rng =np.random.default_rng()
+
+# Perform 100,000 episodes
+for i in range(100_000):
+    # Reset the environment
+    state = env.reset()
+
+    done = False
+    
+    # Loop as long as the game is not over, i.e. done is not True
+    while not done:
+        if rng.random() < epsilon:
+            action = env.action_space.sample() # Explore the action space
+        else:
+            action = np.argmax(q_table[state]) # Exploit learned values
